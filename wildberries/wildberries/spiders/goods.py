@@ -1,3 +1,6 @@
+import json
+import re
+
 import scrapy
 
 from wildberries.items import WildberriesItem
@@ -18,10 +21,13 @@ AJAX_REQUEST_SELLERS = 'https://wbx-content-v2.wbstatic.net/sellers/{}.json'
 class GoodsSpider(scrapy.Spider):
     name = 'goods'
     allowed_domains = ['www.wildberries.ru', 'wbxcatalog-ru.wildberries.ru', 'wbx-content-v2.wbstatic.net']
-    ids = [8888430, 13724854]
-    start_urls = ['https://www.wildberries.ru/catalog/8888430/detail.aspx']
+    ids = {8888430, 13724854}
 
     def start_requests(self):
+        with open('result.jl', 'r') as f:
+            for line in f.readlines():
+                good = re.findall(r'(\d+)', json.loads(line)['url'])[0]
+                self.ids.add(good)
         for id_ in self.ids:
             item = WildberriesItem()
             item['id'] = id_
@@ -82,6 +88,7 @@ class GoodsSpider(scrapy.Spider):
                                  cb_kwargs={'item': item, 'id': id_})
         else:
             yield item
+
 
     def parse_history_info(self, response, **kwargs):
         item = kwargs['item']
