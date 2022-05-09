@@ -20,4 +20,4 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 #
 # m h  dom mon dow   command
-0 2 * * * sh /home/mvliksakov/project_seminar/cronjobs/main.sh > /home/mvliksakov/project_seminar/cronjobs/log.log
+0 2 * * * sh /home/mvliksakov/project_seminar/hse_project_seminar/cronjobs/main.sh > /home/mvliksakov/project_seminar/hse_project_seminar/cronjobs/log.log
