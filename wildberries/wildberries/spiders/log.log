@@ -1,0 +1,54 @@
+2022-05-05 23:41:43 [scrapy.utils.log] INFO: Scrapy 2.5.1 started (bot: wildberries)
+2022-05-05 23:41:43 [scrapy.utils.log] INFO: Versions: lxml 4.7.1.0, libxml2 2.9.12, cssselect 1.1.0, parsel 1.6.0, w3lib 1.22.0, Twisted 22.1.0, Python 3.10.2 (tags/v3.10.2:a58ebcc, Jan 17 2022, 14:12:15) [MSC v.1929 64 bit (AMD64)], pyOpenSSL 22.0.0 (OpenSSL 1.1.1m  14 Dec 2021), cryptography 36.0.1, Platform Windows-10-10.0.22000-SP0
+2022-05-05 23:41:43 [scrapy.utils.log] DEBUG: Using reactor: twisted.internet.selectreactor.SelectReactor
+2022-05-05 23:41:43 [scrapy.crawler] INFO: Overridden settings:
+{'BOT_NAME': 'wildberries',
+ 'LOG_FILE': 'log.log',
+ 'NEWSPIDER_MODULE': 'wildberries.spiders',
+ 'SPIDER_MODULES': ['wildberries.spiders']}
+2022-05-05 23:41:43 [scrapy.extensions.telnet] INFO: Telnet Password: 27c9f2f7aaaabdc9
+2022-05-05 23:41:43 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.feedexport.FeedExporter',
+ 'scrapy.extensions.logstats.LogStats']
+2022-05-05 23:41:43 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2022-05-05 23:41:43 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2022-05-05 23:41:43 [scrapy.middleware] INFO: Enabled item pipelines:
+[]
+2022-05-05 23:41:43 [scrapy.core.engine] INFO: Spider opened
+2022-05-05 23:41:43 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2022-05-05 23:41:43 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/62149294/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/58109103/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/29765598/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/63415719/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/41777528/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/40615033/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/62145549/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/3590684/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/74709108/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/63415098/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/71989735/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/38007663/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/13606140/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/68451407/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/40436325/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/40937047/detail.aspx> (referer: None)
+2022-05-05 23:41:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.wildberries.ru/catalog/48280517/detail.aspx> (referer: None)
