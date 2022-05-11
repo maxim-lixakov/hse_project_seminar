@@ -7,4 +7,6 @@ now=$(date +"%m_%d_%Y")
 echo $now
 #run scrapy spider
 scrapy crawl goods -o res_for_$now.jl
+#insert to psql
+python /home/mvliksakov/project_seminar/hse_project_seminar/jl_to_psql/main.py
 

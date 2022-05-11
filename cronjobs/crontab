@@ -21,3 +21,4 @@
 #
 # m h  dom mon dow   command
 0 2 * * * sh /home/mvliksakov/project_seminar/hse_project_seminar/cronjobs/main.sh > /home/mvliksakov/project_seminar/hse_project_seminar/cronjobs/log.log
+0 5 * * * python /home/mvliksakov/project_seminar/hse_project_seminar/jl_to_psql/main.py > /home/mvliksakov/project_seminar/hse_project_seminar/jl_to_psql/log.log
