@@ -1,0 +1,17 @@
+CREATE TABLE products (
+  product_id INTEGER,
+  rating DECIMAL,
+  comments_amt INTEGER,
+  name VARCHAR (500),
+  brand VARCHAR(200),
+  price INTEGER,
+  sale_price INTEGER,
+  pics_amt INTEGER,
+  colors VARCHAR(200),
+  qty INTEGER,
+  supplier_id INTEGER,
+  supplier_name VARCHAR(200),
+  inn VARCHAR(20),
+  legal_address VARCHAR(200),
+  dt DATE
+);
