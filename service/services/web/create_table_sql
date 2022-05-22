@@ -1,7 +1,6 @@
 CREATE TABLE products (
   product_id INTEGER,
   rating DECIMAL,
-  comments_amt INTEGER,
   name VARCHAR (500),
   brand VARCHAR(200),
   price INTEGER,
