@@ -35,16 +35,16 @@ except:
 
 # print(df_temp.columns)
 
-df_temp_0, df_temp_1 = df_temp[:20000], df_temp[:20000]
+df_temp_0, df_temp_1 = df_temp[:20000], df_temp[20000:]
 values_0 = str([tuple(el) for el in df_temp_0.values])[1:-1]
 values_1 = str([tuple(el) for el in df_temp_1.values])[1:-1]
 
 connection = psycopg2.connect(
-  host = "localhost",
-  user = "romashka",
-  password = "romashka",
-  database = "wildberries",
-  port = 5432
+  host='db',
+  user='hello_flask',
+  password='hello_flask',
+  database='hello_flask_prod',
+  port=7777,
 )
 
 with connection.cursor() as cursor:
