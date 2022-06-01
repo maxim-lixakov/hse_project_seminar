@@ -1,11 +1,11 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import os
 
 import psycopg2
 import pandas as pd
 
-date_now = datetime.now().strftime("%m_%d_%Y %H:%M:%S").split()[0]
-dates = [(datetime.today() - timedelta(days=i)).strftime('%Y-%m-%d')[5:].replace('-', '_') + '_2022' for i in range(24, -1, -1)]
+delta = date.today() - date(2022, 4, 24)
+dates = [str(date(2022, 4, 24) + timedelta(days=i))[5:].replace('-', '_') + '_2022' for i in range(delta.days + 1)]
 
 connection = psycopg2.connect(
   host='db',
@@ -15,15 +15,15 @@ connection = psycopg2.connect(
   port=5432,
 )
 
-for date in dates:
+for cur_date in dates:
 
   try:
-    df_temp = pd.read_json(f'/home/spiders/res_for_{date}.jl', lines=True)
+    df_temp = pd.read_json(f'/home/spiders/res_for_{cur_date}.jl', lines=True)
   except:
     print(date, 'does not exist')
     continue
 
-  df_temp['dt'] = datetime.strptime(date, '%m_%d_%Y').date().strftime('%m-%d-%Y')
+  df_temp['dt'] = datetime.strptime(cur_date, '%m_%d_%Y').date().strftime('%m-%d-%Y')
 
   numeric_cols = ['pics', 'priceU', 'salePriceU', 'qty', 'supplierId', 'rating', 'inn']
   for col in numeric_cols:
@@ -51,7 +51,7 @@ for date in dates:
 
   # print(df_temp.columns)
 
-  df_temp_0, df_temp_1 = df_temp[:20000], df_temp[:20000]
+  df_temp_0, df_temp_1 = df_temp[:20000], df_temp[20000:]
   values_0 = str([tuple(el) for el in df_temp_0.values])[1:-1]
   values_1 = str([tuple(el) for el in df_temp_1.values])[1:-1]
 
@@ -60,7 +60,9 @@ for date in dates:
     f'INSERT INTO products VALUES {values_0};'
     )
     connection.commit()
-    cursor.execute(
-    f'INSERT INTO products VALUES {values_1};'
-    )
-    print(f'SUCCESS on {date}')
+    if values_1:
+      cursor.execute(
+      f'INSERT INTO products VALUES {values_1};'
+      )
+      connection.commit()
+    print(f'SUCCESS on {cur_date}')

@@ -6,8 +6,7 @@ import requests
 import psycopg2
 import psycopg2.extras
 import pandas as pd
-
-
+from sklearn.linear_model import LinearRegression
 from flask import Blueprint, render_template, jsonify, request
 from flask_executor import Executor
 from sqlalchemy.exc import NoResultFound
@@ -33,7 +32,20 @@ conn = psycopg2.connect(
 )
 
 
-# Ежедневное количество проданных товаров по id товара
+@main.route('/some_info/<prod_id>', methods=['GET'])
+def some_info(prod_id):
+    with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+        cursor.execute(f'''
+          SELECT product_id, name, brand, price, sale_price, pics_amt, colors, supplier_name, inn
+          FROM products
+          WHERE product_id = {prod_id} AND dt = now()::date - interval '3 days'
+        ''')
+        fetched = cursor.fetchall()
+
+    return jsonify({'result':[dict(row) for row in fetched]})
+
+
+#                                            id       
 @main.route('/daily_qty/<prod_id>', methods=['GET'])
 def daily_qty(prod_id):
 
@@ -55,28 +67,12 @@ def daily_qty(prod_id):
 # print(daily_qty(connection, 18602386))
 
 
-# Количество проданных товаров с выбранного дня по id товара
-@main.route('/day_qty/<prod_id>', methods=['GET'])
-def sold_prods_by_id(prod_id):
-
-    with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-        cursor.execute(f'''
-          SELECT SUM(CASE WHEN diff > 0 THEN diff ELSE 0 END) AS sold_prods
-          FROM (
-          SELECT LEAD(qty, -1) OVER (ORDER BY dt) - qty AS diff
-            FROM products
-            WHERE product_id = {prod_id}
-        ) AS t1
-        ''')
-        fetched = cursor.fetchall()
-
-    return jsonify({'result':[dict(row) for row in fetched]})
 
 
 # print(sold_prods_by_id(connection, 18602386))
 
 
-# В среднем (по дням) на маркетплейсе доступно столько-то товара с наименованием N. Посмотреть насколько большой рынок сейчас
+#           (       )                                 -                          N.                                          
 @main.route('/avg_by_name/<prod_name>', methods=['GET'])
 def avg_available_prods_amt_by_name(prod_name):
 
@@ -92,10 +88,10 @@ def avg_available_prods_amt_by_name(prod_name):
     return jsonify({'result':[dict(row) for row in fetched]})
 
 
-# print(avg_available_prods_amt_by_name(connection, 'Соль для ванн'))
+# print(avg_available_prods_amt_by_name(connection, '             '))
 
 
-# В среднем (по дням) на маркетплейсе каждый поставщик имеет по столько-то товара с наименованием N. Посмотреть кто сколько продает
+#           (       )                                                  -                          N.                               
 @main.route('/goods_by_prod/<prod_name>', methods=['GET'])
 def avg_seller_prods_amt_by_name(prod_name):
 
@@ -111,10 +107,68 @@ def avg_seller_prods_amt_by_name(prod_name):
     return jsonify({'result':[dict(row) for row in fetched]})
 
 
-# print(avg_seller_prods_amt_by_name(connection, 'Соль для ванн'))
+# print(avg_seller_prods_amt_by_name(connection, '             '))
 
 
-# Количество дней с нулевым остатком по id товара (есть дефицит получается ХА)
+@main.route('/viewpage', methods=['GET'])
+def viewpage():
+    a = """
+    <html>
+    <head>
+    <title>My first chart using FusionCharts Suite XT</title>
+    <!-- Include fusioncharts core library -->
+    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+    <!-- Include fusion theme -->
+    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+    <script type="text/javascript">
+     
+     FusionCharts.ready(function () {
+     
+     var revenueChart = new FusionCharts({
+     "type":"line",
+     "renderAt":"chartContainer",
+     "width":'100%',
+     "height":'100%',
+     "dataFormat":"json",
+     "dataSource": {
+     "chart": {
+     "caption":"Р’С‹СЂСѓС‡РєР° РїРѕ РґРЅСЏРј",
+     "subCaption":"",
+     "xAxisName":"Р”Р°С‚Р°",
+     "yAxisName":"РЎСѓРјРјР°",
+     "theme":"zune",
+     
+     },
+     "data": """ +request.args.get('body')+"""
+          
+          
+          
+        
+     
+     }
+     });
+     
+     revenueChart.render();
+     });
+     
+    </script>
+    
+    </script>
+    </head>
+    <body>
+    <div id="chartContainer">FusionCharts XT will load here!</div>
+    </body>
+    </html>
+    """
+
+    return a
+    #file1 = '/home/mvliksakov/project_seminar/hse_project_seminar/service/services/web/routes/index.html'
+
+    #with open(file1, 'r') as f:
+     #   return f.read()
+
+
+#                                       id        (                          )
 @main.route('/days_without_qty/<prod_id>', methods=['GET'])
 def zero_qty_days_amt_by_id(prod_id):
     with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
@@ -129,6 +183,68 @@ def zero_qty_days_amt_by_id(prod_id):
         fetched = cursor.fetchall()
 
     return jsonify({'result':[dict(row) for row in fetched]})
+
+
+@main.route('/daily_qty_revenue/<prod_id>', methods=['GET'])
+def daily_qty_revenue(prod_id):
+    with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+        cursor.execute(f'''
+          SELECT product_id, name, dt, diff, diff * sale_price AS revenue FROM (
+            SELECT
+              product_id, name, qty, dt, LEAD(qty, -1) OVER (ORDER BY dt) - qty AS diff, sale_price
+              FROM products
+              WHERE product_id = {prod_id}
+              ) AS t1
+          WHERE diff IS NOT NULL AND diff >= 0
+        ''')
+        fetched = cursor.fetchall()
+    return jsonify({'result':[dict(row) for row in fetched]})
+
+
+@main.route('/sold_prods_by_id/<prod_id>', methods=['GET'])
+def sold_prods_by_id(prod_id):
+    with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+        cursor.execute(f'''
+      SELECT SUM(sale_price) / COUNT(*) * SUM(CASE WHEN diff > 0 THEN diff ELSE 0 END) AS total_revenue,
+       SUM(CASE WHEN diff > 0 THEN diff ELSE 0 END) AS sold_prods_amt
+      FROM (
+      SELECT sale_price, LEAD(qty, -1) OVER (ORDER BY dt) - qty AS diff
+        FROM products
+        WHERE product_id = {prod_id}
+    ) AS t1
+    ''')
+        fetched = cursor.fetchall()
+    return jsonify({'result':[dict(row) for row in fetched]})
+
+
+@main.route('/predict_revenue/<prod_id>', methods=['GET'])
+def predict_revenue(prod_id, days_to_predict=7):
+    with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+        cursor.execute(f'''
+          SELECT product_id, name, dt, diff, diff * sale_price AS revenue FROM (
+            SELECT
+              product_id, name, qty, dt, LEAD(qty, -1) OVER (ORDER BY dt) - qty AS diff, sale_price
+              FROM products
+              WHERE product_id = {prod_id}
+              ) AS t1
+          WHERE diff IS NOT NULL AND diff >= 0
+        ''')
+        fetched = cursor.fetchall()
+    sql_dict = [dict(row) for row in fetched]
+
+    df_req = pd.DataFrame(sql_dict)
+
+    revenue = list(df_req['revenue'].values)
+
+    X = [[i] for i in range(1, len(revenue) + 1)]
+    y = revenue
+
+    regressor = LinearRegression().fit(X, y)
+
+    return jsonify({'result':
+                        [0 if el < 0 else int(el) for el in regressor.predict([[len(revenue)+i]
+                                                                               for i in range(1, days_to_predict+1)])]})
+
 
 
 @main.route('/load_data', methods=['GET'])
@@ -165,7 +281,7 @@ def load_data():
 
     # print(df_temp.columns)
 
-    df_temp_0, df_temp_1 = df_temp[:20000], df_temp[:20000]
+    df_temp_0, df_temp_1 = df_temp[:20000], df_temp[20000:]
     values_0 = str([tuple(el) for el in df_temp_0.values])[1:-1]
     values_1 = str([tuple(el) for el in df_temp_1.values])[1:-1]
 
@@ -182,7 +298,10 @@ def load_data():
             f'INSERT INTO products VALUES {values_0};'
         )
         conn.commit()
+
+    if values_1:
         cursor.execute(
-            f'INSERT INTO products VALUES {values_1};'
-        )
+          	  f'INSERT INTO products VALUES {values_1};'
+        	)
+        conn.commit()
         print(f'SUCCESS on {date_now}')
