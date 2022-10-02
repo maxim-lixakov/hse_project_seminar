@@ -8,7 +8,7 @@ from wildberries.items import WildberriesItem
 SUCCESS_CODES = [200, 201]
 
 PAGE_URL = 'https://www.wildberries.ru/catalog/{}/detail.aspx'
-AJAX_REQUEST__GOOD_INFO = 'https://wbxcatalog-ru.wildberries.ru/nm-2-card/catalog?' \
+AJAX_REQUEST__GOOD_INFO = 'https://card.wb.ru/cards/detail?' \
                'spp=0&regions=83,75,64,4,38,30,33,70,71,22,31,66,68,82,48,40,1,69,80' \
                '&stores=117673,122258,122259,125238,125239,125240,507,3158,117501,120602,120762,6158,121709,124731,' \
                '130744,159402,2737,117986,1733,686,132043' \
