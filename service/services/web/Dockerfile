@@ -18,4 +18,4 @@ RUN pip install -r requirements.txt
 COPY . /usr/src/app/
 
 # run entrypoint.sh
-ENTRYPOINT sudo /usr/src/app/entrypoint.sh
+#ENTRYPOINT sudo /usr/src/app/entrypoint.sh

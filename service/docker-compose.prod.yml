@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: ./services/web
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     command: gunicorn --bind 0.0.0.0:5000 manage:app
     volumes:
       - static_volume:/home/app/web/project/static
@@ -37,3 +37,4 @@ volumes:
   postgres_data_prod:
   static_volume:
   media_volume:
+ume:

@@ -1,12 +1,12 @@
 import json
 from datetime import datetime, timedelta
+from collections import defaultdict
 import os
 
 import requests
 import psycopg2
 import psycopg2.extras
 import pandas as pd
-from sklearn.linear_model import LinearRegression
 from flask import Blueprint, render_template, jsonify, request
 from flask_executor import Executor
 from sqlalchemy.exc import NoResultFound
@@ -16,6 +16,35 @@ from project import app
 
 executor = Executor(app)
 main = Blueprint('main', __name__)
+
+
+class Products(db.Model):
+    __tablename__ = "products"
+
+    info_id = db.Column(db.Integer, primary_key=True, index=True)
+    product_id = db.Column(db.Integer)
+    rating = db.Column(db.Numeric(3, 2))
+    description = db.Column(db.Text)
+    questions = db.Column(db.Text)
+    name = db.Column(db.String(500))
+    brand = db.Column(db.String(200))
+    priceU = db.Column(db.Integer)
+    salePriceU = db.Column(db.Integer)
+    pics = db.Column(db.Integer)
+    colors = db.Column(db.String(500))
+    sizes = db.Column(db.String(500))
+    qty = db.Column(db.Integer)
+    diffPrice = db.Column(db.Boolean)
+    supplierId = db.Column(db.Integer)
+    supplierName = db.Column(db.String(200))
+    inn = db.Column(db.String(20))
+    price_history = db.Column(db.Text)
+    dt = db.Column(db.Date)
+
+
+db.create_all()
+db.session.commit()
+
 
 
 @main.route('/main', methods=['GET'])
@@ -36,7 +65,7 @@ conn = psycopg2.connect(
 def some_info(prod_id):
     with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
         cursor.execute(f'''
-          SELECT product_id, name, brand, price, sale_price, pics_amt, colors, supplier_name, inn
+          SELECT *
           FROM products
           WHERE product_id = {prod_id} AND dt = now()::date - interval '3 days'
         ''')
@@ -239,12 +268,69 @@ def predict_revenue(prod_id, days_to_predict=7):
     X = [[i] for i in range(1, len(revenue) + 1)]
     y = revenue
 
-    regressor = LinearRegression().fit(X, y)
+    # regressor = LinearRegression().fit(X, y)
+    #
+    # return jsonify({'result':
+    #                     [0 if el < 0 else int(el) for el in regressor.predict([[len(revenue)+i]
+    #                                                                            for i in range(1, days_to_predict+1)])]})
 
-    return jsonify({'result':
-                        [0 if el < 0 else int(el) for el in regressor.predict([[len(revenue)+i]
-                                                                               for i in range(1, days_to_predict+1)])]})
+@main.route("/upload", methods=['POST'])
+def upload_data():
 
+    date_now = datetime.now().strftime("%m_%d_%Y %H:%M:%S").split()[0]
+    dt = datetime.strptime(date_now, '%m_%d_%Y').date().strftime('%m-%d-%Y')
+
+    f = request.files.get('file')
+    vals = []
+    errors = 0
+
+    for line in f.read().decode('ascii').split('\n'):
+        try:
+            vals.append(defaultdict(lambda: None, json.loads(line)))
+        except:
+            errors += 1
+
+    print(f'{errors} broken jsons out of {len(vals)}', flush=True)  # 1 out of 141 000 as a rule
+
+    obj_lines = ['questions', 'colors', 'sizes', 'price_history']
+
+    for val in vals:
+
+        for line in obj_lines:
+            if val[line]:
+                val[line] = str(val[line])
+
+        db_model = Products(
+            product_id=val['id'],
+            rating=val['rating'],
+            description=val['description'],
+            questions=val['questions'],
+            name=val['name'],
+            brand=val['brand'],
+            priceU=val['priceU'],
+            salePriceU=val['salePriceU'],
+            pics=val['pics'],
+            colors=val['colors'],
+            sizes=val['sizes'],
+            qty=val['qty'],
+            diffPrice=val['diffPrice'],
+            supplierId=val['supplierId'],
+            supplierName=val['supplierName'],
+            inn=val['inn'],
+            price_history=val['price_history'],
+            dt=dt
+        )
+        db.session.add(db_model)
+
+    db.session.commit()
+
+    return {"Result": "OK"}
+
+
+@main.route('/get_info/<prod_id>', methods=['GET'])
+def get_info(prod_id):
+    product = db.session.query(Products).filter(Products.product_id == prod_id).first()
+    return jsonify(qty=product.qty)
 
 
 @main.route('/load_data', methods=['GET'])
@@ -305,3 +391,5 @@ def load_data():
         	)
         conn.commit()
         print(f'SUCCESS on {date_now}')
+
+    print(f'SUCCESS on {date_now}')

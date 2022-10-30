@@ -25,7 +25,7 @@ for cur_date in dates:
 
   df_temp['dt'] = datetime.strptime(cur_date, '%m_%d_%Y').date().strftime('%m-%d-%Y')
 
-  numeric_cols = ['pics', 'priceU', 'salePriceU', 'qty', 'supplierId', 'rating', 'inn']
+  numeric_cols = ['priceU', 'salePriceU', 'qty', 'supplierId', 'rating', 'inn']
   for col in numeric_cols:
     df_temp[col] = df_temp[col].fillna(0)
 
@@ -45,7 +45,7 @@ for cur_date in dates:
     df_temp[col] = df_temp[col].apply(lambda x: x.translate({ord(c): None for c in '\'&'}))
 
   try:
-    df_temp = df_temp.drop(columns=['questions', 'diffPrice', 'description', 'sizes', 'comments'])
+    df_temp = df_temp.drop(columns=['questions', 'diffPrice', 'description', 'sizes', 'comments', 'pics'])
   except:
     df_temp = df_temp.drop(columns=['questions', 'diffPrice', 'description', 'sizes'])
 
