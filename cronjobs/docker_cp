@@ -1,2 +1,2 @@
-docker cp "/home/mvliksakov/project_seminar/hse_project_seminar/crawling/wildberries/wildberries/spiders/"  service-web-1:/home
+docker cp "/root/hse_project_seminar/crawling/wildberries/wildberries/spiders/"  service-web-1:/home
 docker exec -it service-web-1 bash
