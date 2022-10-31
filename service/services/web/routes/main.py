@@ -24,8 +24,8 @@ class Products(db.Model):
     info_id = db.Column(db.Integer, primary_key=True, index=True)
     product_id = db.Column(db.Integer)
     rating = db.Column(db.Numeric(3, 2))
-    description = db.Column(db.Text)
-    questions = db.Column(db.Text)
+    description = db.Column(db.String(50000))
+    questions = db.Column(db.String(50000))
     name = db.Column(db.String(500))
     brand = db.Column(db.String(200))
     priceU = db.Column(db.Integer)
@@ -38,7 +38,7 @@ class Products(db.Model):
     supplierId = db.Column(db.Integer)
     supplierName = db.Column(db.String(200))
     inn = db.Column(db.String(20))
-    price_history = db.Column(db.Text)
+    price_history = db.Column(db.String(50000))
     dt = db.Column(db.Date)
 
 
@@ -392,4 +392,3 @@ def load_data():
         conn.commit()
         print(f'SUCCESS on {date_now}')
 
-    print(f'SUCCESS on {date_now}')

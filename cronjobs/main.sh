@@ -8,5 +8,5 @@ echo $now
 #run scrapy spider
 scrapy crawl goods -o res_for_$now.jl
 #insert to psql
-python /root/hse_project_seminar/jl_to_psql/main.py
+python3 /root/hse_project_seminar/cronjobs/download_data.py /root/hse_project_seminar/crawling/wildberries/wildberries/spiders/res_for_$now.jl
 
