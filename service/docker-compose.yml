@@ -33,6 +33,16 @@ services:
     depends_on:
       - web
 
+  frontend:
+    build:
+      context: ./services/frontend
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - web
+
 volumes:
   postgres_data_prod:
   static_volume:

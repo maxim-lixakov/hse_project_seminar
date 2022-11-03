@@ -101,6 +101,13 @@ def daily_qty(prod_id):
 # print(sold_prods_by_id(connection, 18602386))
 
 
+@main.route('/api/data_info', methods=['GET'])
+def data_info():
+    count = db.session.query(Products).count()
+    return jsonify({'rows': count})
+
+
+
 #           (       )                                 -                          N.                                          
 @main.route('/avg_by_name/<prod_name>', methods=['GET'])
 def avg_available_prods_amt_by_name(prod_name):
@@ -327,7 +334,7 @@ def upload_data():
     return {"Result": "OK"}
 
 
-@main.route('/get_info/<prod_id>', methods=['GET'])
+@main.route('/api/get_info/<prod_id>', methods=['GET'])
 def get_info(prod_id):
     product = db.session.query(Products).filter(Products.product_id == prod_id).first()
     return jsonify(qty=product.qty)
