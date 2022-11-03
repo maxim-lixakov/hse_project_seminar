@@ -20,7 +20,7 @@ class App extends React.Component {
     // execute the code
     componentDidMount() {
         fetch(
-"http://localhost:1337/api/data_info")
+"http://217.25.88.87:1337/api/data_info")
             .then((res) => res.json())
             .then((json) => {
                 this.setState({
@@ -42,7 +42,6 @@ class App extends React.Component {
             <h1> Please wait some time.... </h1> </div> ;
           return (
         <div style={myStyle} >
-
 <Circle
     size={170}
     showPercentageSymbol={false}
