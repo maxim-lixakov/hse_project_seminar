@@ -1,5 +1,4 @@
 # created by virtualenv automatically
-*
 # Logs
 logs
 *.log
@@ -35,3 +34,5 @@ typings/
 
 # Yarn Integrity file
 .yarn-integrity
+/service/services/frontend/node_modules/
+/service/services/frontend/node_modules/
