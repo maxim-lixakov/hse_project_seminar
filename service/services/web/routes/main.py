@@ -281,7 +281,7 @@ def predict_revenue(prod_id, days_to_predict=7):
     #                     [0 if el < 0 else int(el) for el in regressor.predict([[len(revenue)+i]
     #                                                                            for i in range(1, days_to_predict+1)])]})
 
-@main.route("/upload", methods=['POST'])
+@main.route("/api/upload", methods=['POST'])
 def upload_data():
 
     date_now = datetime.now().strftime("%m_%d_%Y %H:%M:%S").split()[0]
