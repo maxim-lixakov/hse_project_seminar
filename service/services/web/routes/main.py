@@ -104,7 +104,11 @@ def daily_qty(prod_id):
 @main.route('/api/data_info', methods=['GET'])
 def data_info():
     count = db.session.query(Products).count()
-    return jsonify({'rows': count})
+    goods = db.session.query(Products).all()
+    res = set()
+    for good in goods:
+        res.add(good.product_id)
+    return jsonify({'rows': count, 'goods': len(res)})
 
 
 
