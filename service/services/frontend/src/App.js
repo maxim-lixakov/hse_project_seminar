@@ -26,7 +26,7 @@ class App extends React.Component {
     // execute the code
     componentDidMount() {
         fetch(
-"http://217.25.88.87:1337/api/data_info")
+"http://localhost:1337/api/data_info")
             .then((res) => res.json())
             .then((json) => {
                 this.setState({

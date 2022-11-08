@@ -35,7 +35,7 @@ services:
 
   frontend:
     build:
-      context: ./services/frontend
+      context: ./services/material-dashboard-react
       dockerfile: Dockerfile
     ports:
       - 80:80
