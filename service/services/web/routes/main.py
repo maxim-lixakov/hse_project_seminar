@@ -337,8 +337,9 @@ def upload_data():
 
 @main.route('/api/get_info/<prod_id>', methods=['GET'])
 def get_info(prod_id):
-    product = db.session.query(Products).filter(Products.product_id == prod_id).first()
-    return jsonify(qty=product.qty)
+    products = db.session.query(Products).filter(Products.product_id == prod_id)
+    qty = [product.qty for product in products]
+    return jsonify(qty=qty)
 
 
 @main.route('/load_data', methods=['GET'])

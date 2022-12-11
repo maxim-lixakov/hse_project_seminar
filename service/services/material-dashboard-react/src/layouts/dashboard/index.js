@@ -28,7 +28,7 @@ import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 
 // Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
+import good_id from "layouts/dashboard/data/reportsBarChartData";
 import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 
 // Dashboard components
@@ -38,6 +38,7 @@ import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
   const [rows, setRows] = useState("");
+  const [qty, setQty] = useState("");
 
   useEffect(() => {
     const url = "http://217.25.88.87:1337/api/data_info";
@@ -50,7 +51,23 @@ function Dashboard() {
         console.log("error", error);
       }
     };
+    const fetchData2 = async () => {
+      try {
+        console.log(good_id, good_id.toString())
+        const  url = `http://217.25.88.87:1337/api/get_info/${good_id.good_id}`;
+        const response = await fetch(url);
+        const json = await response.json();
+        let qty = json.qty;
+        setQty({
+  labels: ["M", "T", "W", "T", "F", "S", "S"],
+  datasets: { label: "Sales", data: qty},
+});
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
     fetchData();
+    fetchData2()
   }, []);
 
   return (
@@ -65,11 +82,6 @@ function Dashboard() {
                 icon="weekend"
                 title="Items collected"
                 count={rows}
-                percentage={{
-                  color: "success",
-                  amount: `+${rows}%`,
-                  label: "than lask week",
-                }}
               />
             </MDBox>
           </Grid>
@@ -77,13 +89,8 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 icon="leaderboard"
-                title="Today's Users"
+                title="Кол-во товара на складе"
                 count="2,300"
-                percentage={{
-                  color: "success",
-                  amount: "+3%",
-                  label: "than last month",
-                }}
               />
             </MDBox>
           </Grid>
@@ -92,13 +99,8 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="success"
                 icon="store"
-                title="Revenue"
+                title="Прирост кол-ва товара"
                 count="34k"
-                percentage={{
-                  color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
-                }}
               />
             </MDBox>
           </Grid>
@@ -107,13 +109,8 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Прирост выручки"
                 count="+91"
-                percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
-                }}
               />
             </MDBox>
           </Grid>
@@ -124,10 +121,10 @@ function Dashboard() {
               <MDBox mb={3}>
                 <ReportsBarChart
                   color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
+                  title="Товаров на складе"
+                  description="остаток количества товара на складе"
+                  date="обновлено 20.12.2022"
+                  chart={qty}
                 />
               </MDBox>
             </Grid>
@@ -135,13 +132,13 @@ function Dashboard() {
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="success"
-                  title="daily sales"
+                  title="Выручка товара"
                   description={
                     <>
-                      (<strong>+15%</strong>) increase in today sales.
+                      (<strong>+15%</strong>) прирост выручки.
                     </>
                   }
-                  date="updated 4 min ago"
+                  date="обновлено 20.12.2022"
                   chart={sales}
                 />
               </MDBox>
@@ -150,9 +147,9 @@ function Dashboard() {
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
+                  title="Прогноз выручки"
+                  description="ожидаемый прогноз выручки на 7 дней"
+                  date="обновлено 20.12.2022"
                   chart={tasks}
                 />
               </MDBox>
@@ -160,14 +157,6 @@ function Dashboard() {
           </Grid>
         </MDBox>
         <MDBox>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
-              <Projects />
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
-            </Grid>
-          </Grid>
         </MDBox>
       </MDBox>
       <Footer />
