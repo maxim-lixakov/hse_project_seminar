@@ -60,7 +60,7 @@ function Dashboard() {
         let qty = json.qty;
         setQty({
   labels: ["M", "T", "W", "T", "F", "S", "S"],
-  datasets: { label: "Sales", data: qty},
+  datasets: { label: "кол-во товара", data: [12, 45, 46, 75, 57, 34, 57, 53]},
 });
       } catch (error) {
         console.log("error", error);
@@ -80,7 +80,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="dark"
                 icon="weekend"
-                title="Items collected"
+                title="Записей по товару"
                 count={rows}
               />
             </MDBox>
