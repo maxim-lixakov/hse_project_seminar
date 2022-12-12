@@ -60,7 +60,7 @@ function Dashboard() {
         let qty = json.qty;
         setQty({
   labels: ["M", "T", "W", "T", "F", "S", "S"],
-  datasets: { label: "кол-во товара", data: [12, 45, 46, 75, 57, 34, 57, 53]},
+  datasets: { label: "кол-во товара", data: qty},
 });
       } catch (error) {
         console.log("error", error);
