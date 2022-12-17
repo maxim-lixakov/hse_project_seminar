@@ -29,45 +29,62 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 
 // Data
 import good_id from "layouts/dashboard/data/reportsBarChartData";
-import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
+// import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 
 // Dashboard components
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 
 function Dashboard() {
-  const { sales, tasks } = reportsLineChartData;
-  const [rows, setRows] = useState("");
-  const [qty, setQty] = useState("");
-
+  // const { sales, tasks } = reportsLineChartData;
+  const [records_amt, setRecordsAmt] = useState("");
+  const [last_qty, setLastQty] = useState("");
+  const [qty_values, setQtyValues] = useState("");
+  const [qty_growth, setQtyGrowth] = useState("");
+  const [revenue_week_growth_rate, setRevenueWeekGrowthRate] = useState("");
+  const [predicted_revenue_values, setPredictedRevenueValues] = useState("");
+  const [revenue_values, setRevenueValues] = useState("");
   useEffect(() => {
-    const url = "http://217.25.88.87:1337/api/data_info";
+    // const url = "http://localhost:1337/api/data_info";
+    // const fetchData2 = async () => {
+    //   try {
+    //     const response = await fetch(url);
+    //     const json = await response.json();
+    //     setRows(json.rows);
+    //   } catch (error) {
+    //     console.log("error", error);
+    //   }
+    // };
     const fetchData = async () => {
       try {
-        const response = await fetch(url);
-        const json = await response.json();
-        setRows(json.rows);
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    const fetchData2 = async () => {
-      try {
         console.log(good_id, good_id.toString())
-        const  url = `http://217.25.88.87:1337/api/get_info/${good_id.good_id}`;
+        const  url = `http://217.25.88.87:1337/api/info/${good_id.good_id}`;
         const response = await fetch(url);
         const json = await response.json();
-        let qty = json.qty;
-        setQty({
+        let qty_values = json.qty_values;
+        let last_qty = json.last_qty;
+        setRecordsAmt(json.records_amt)
+        setQtyGrowth(`${json.qty_growth}%`);
+        setRevenueWeekGrowthRate(`${json.revenue_week_growth_rate}%`)
+        setLastQty(last_qty);
+        setPredictedRevenueValues({
+      labels: ["M", "T", "W", "T", "F", "S", "S"],
+    datasets: { label: "предсказуемая выручка (руб)", data: json.predicted_revenue_values.slice(-7)},
+  });
+        setRevenueValues({
+      labels: ["M", "T", "W", "T", "F", "S", "S"],
+    datasets: { label: "выручка (руб)", data: json.revenue_values.slice(-7)},
+  })
+        setQtyValues({
   labels: ["M", "T", "W", "T", "F", "S", "S"],
-  datasets: { label: "кол-во товара", data: qty},
+  datasets: { label: "кол-во товара", data: qty_values.slice(-7)},
 });
       } catch (error) {
         console.log("error", error);
       }
     };
-    fetchData();
-    fetchData2()
+    // fetchData2();
+    fetchData()
   }, []);
 
   return (
@@ -81,7 +98,7 @@ function Dashboard() {
                 color="dark"
                 icon="weekend"
                 title="Записей по товару"
-                count={rows}
+                count={records_amt}
               />
             </MDBox>
           </Grid>
@@ -90,7 +107,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 icon="leaderboard"
                 title="Кол-во товара на складе"
-                count="2,300"
+                count={last_qty}
               />
             </MDBox>
           </Grid>
@@ -100,7 +117,7 @@ function Dashboard() {
                 color="success"
                 icon="store"
                 title="Прирост кол-ва товара"
-                count="34k"
+                count={qty_growth}
               />
             </MDBox>
           </Grid>
@@ -110,7 +127,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Прирост выручки"
-                count="+91"
+                count={revenue_week_growth_rate}
               />
             </MDBox>
           </Grid>
@@ -123,8 +140,8 @@ function Dashboard() {
                   color="info"
                   title="Товаров на складе"
                   description="остаток количества товара на складе"
-                  date="обновлено 20.12.2022"
-                  chart={qty}
+                  date="обновлено 21.12.2022"
+                  chart={qty_values}
                 />
               </MDBox>
             </Grid>
@@ -135,11 +152,11 @@ function Dashboard() {
                   title="Выручка товара"
                   description={
                     <>
-                      (<strong>+15%</strong>) прирост выручки.
+                      (<strong>+{revenue_week_growth_rate}</strong>) прирост выручки.
                     </>
                   }
-                  date="обновлено 20.12.2022"
-                  chart={sales}
+                  date="обновлено 21.12.2022"
+                  chart={revenue_values}
                 />
               </MDBox>
             </Grid>
@@ -149,8 +166,8 @@ function Dashboard() {
                   color="dark"
                   title="Прогноз выручки"
                   description="ожидаемый прогноз выручки на 7 дней"
-                  date="обновлено 20.12.2022"
-                  chart={tasks}
+                  date="обновлено 21.12.2022"
+                  chart={predicted_revenue_values}
                 />
               </MDBox>
             </Grid>

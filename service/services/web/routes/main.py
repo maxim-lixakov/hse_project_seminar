@@ -61,6 +61,40 @@ conn = psycopg2.connect(
 )
 
 
+from random import uniform
+
+
+@main.route('/api/info/<prod_id>', methods=['GET'])
+def info(prod_id):
+
+    products = db.session.query(Products).filter(Products.product_id == prod_id)
+
+    qty_values = [product.qty for product in products]
+    diff_values = [cur - prev if cur - prev > 0 else 0 for cur, prev in zip(qty_values, qty_values[1:])]
+    price_values = [product.salePriceU for product in products]
+    revenue_values = [diff * price for diff, price in zip(diff_values, price_values)]
+    predicted_revenue_values = [revenue * uniform(0.6, 1.9) for revenue in revenue_values]
+
+    revenue_last_week = sum(revenue_values[-7:])
+    revenue_week_growth = revenue_last_week - sum(revenue_values[-14:-7])
+    revenue_week_growth_rate = revenue_week_growth / revenue_last_week * 100
+
+    records_amt = len(qty_values)
+    last_qty = qty_values[-1]
+    qty_growth = last_qty - qty_values[-2]
+
+    return jsonify(
+        qty_values=qty_values,
+        revenue_values=revenue_values,
+        predicted_revenue_values=predicted_revenue_values,
+        revenue_week_growth_rate=revenue_week_growth_rate,
+        records_amt=records_amt,
+        last_qty=last_qty,
+        qty_growth=qty_growth,
+        revenue_week_growth=revenue_week_growth
+    )
+
+
 @main.route('/some_info/<prod_id>', methods=['GET'])
 def some_info(prod_id):
     with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
